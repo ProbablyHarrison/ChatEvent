@@ -1,0 +1,113 @@
+package me.Harrison.Myril;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.defaults.BukkitCommand;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import ru.tehkode.permissions.bukkit.PermissionsEx;
+
+import static org.fusesource.jansi.AnsiConsole.out;
+
+public final class OnChatEvent implements Listener {
+    TextComponent Developer = new TextComponent("DEV ");
+
+    @EventHandler
+    public void onPlayerChat(AsyncPlayerChatEvent event) {
+        Player p = event.getPlayer();
+        TextComponent player = new TextComponent(p.getName());
+        TextComponent message = new TextComponent(PermissionsEx.getUser(p).getPrefix());
+
+
+        message.setBold(true);
+        message.setColor(net.md_5.bungee.api.ChatColor.RED);
+        message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "pex"));
+        message.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/ban mate"));
+        if (p.hasPermission("staff.me")) {
+            for (Player t : Bukkit.getOnlinePlayers()) {
+                if (PermissionsEx.getUser(p).inGroup("mod"))
+                    player.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.RED + "" + ChatColor.BOLD + "PLAYER INFO \n" + ChatColor.RESET + "\n" + p.getName() + "'s health " + ChatColor.YELLOW + p.getHealth() + " \n \nYou can't obtain this rank!").create()));
+                message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.RED + "" + ChatColor.BOLD + "STAFF \n" + ChatColor.RESET + "This is a staff rank;\nthese people with this rank help out the server by helping the community out! \n \nYou can't obtain this rank!").create()));
+
+
+                String te = event.getMessage();
+                event.setCancelled(true);
+                event.setFormat("");
+                TextComponent Testing = new TextComponent(" " + event.getMessage().replace("&", "§"));
+                t.spigot().sendMessage(message, player, Testing);
+                System.out.println("" + ChatColor.RED + " " + ChatColor.BOLD + " " + p.getName() + " " + ChatColor.RESET + " " + te);
+
+            }
+        }
+
+        Developer.setBold(true);
+        Developer.setColor(net.md_5.bungee.api.ChatColor.DARK_RED);
+        Developer.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, "myrilmc.com/forum"));
+        Developer.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.DARK_RED + "" + ChatColor.BOLD + "DEVELOPER \n" + ChatColor.RESET + "This is a developer rank;\nthese people with this rank help out the server by creating plugins for us \n \nApply @ dev.myril.com!").create()));
+
+
+        if (p.hasPermission("op.me")) {
+            for (Player t : Bukkit.getOnlinePlayers()) {
+                if(!t.hasPermission("test.me")) {
+                    player.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.RED + "" + ChatColor.BOLD + "PLAYER INFO \n" + ChatColor.RESET + "\n" + p.getName() + "'s health " + ChatColor.YELLOW + p.getHealth() + " \n \nYou can't obtain this rank!").create()));
+
+
+                    String te = event.getMessage();
+                    event.setCancelled(true);
+                    event.setFormat("");
+                    TextComponent Testing = new TextComponent(" " + event.getMessage().replace("&", "§"));
+                    t.spigot().sendMessage(message, player, Testing);
+                    System.out.println("" + ChatColor.RED + " " + ChatColor.BOLD + " " + p.getName() + " " + ChatColor.RESET + " " + te);
+                } else {
+                    player.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ban Notch"));
+                    player.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, ""));
+                    player.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.RED + "" + ChatColor.BOLD + "STAFF INFORMATION \n" + ChatColor.RESET + "This is a staff rank;\n"
+                            + p.getName() + "'s IP " + ChatColor.YELLOW + p.getAddress() + "\n"
+                            + p.getName() + "'s Alts " + ChatColor.YELLOW  +  p.getAddress().getAddress().isMCLinkLocal()
+                            + " \n \nCLICK ME").create()));
+
+                    String te = event.getMessage();
+                    event.setCancelled(true);
+                    event.setFormat("");
+                    TextComponent Testing = new TextComponent( " " + event.getMessage().replace("&", "§"));
+                    t.spigot().sendMessage(message, player,  Testing);
+                    System.out.println("" + ChatColor.RED + " " + ChatColor.BOLD + " " + p.getName() + " " + ChatColor.RESET + " " + te);
+                }
+
+            }
+        } else if (p.hasPermission("dev.me")) {
+            for (Player t : Bukkit.getOnlinePlayers()) {
+                String te = event.getMessage();
+                event.setCancelled(true);
+                event.setFormat("");
+                TextComponent Testing = new TextComponent(" " + p.getName() + " " + event.getMessage().replace("&", "§"));
+                t.spigot().sendMessage(Developer, Testing);
+                System.out.println("" + ChatColor.RED + " " + ChatColor.BOLD + " " + p.getName() + " " + ChatColor.RESET + " " + te);
+
+
+
+        }
+    }else if(p.hasPermission("op.me")) {
+        for (Player t : Bukkit.getOnlinePlayers()) {
+            String te = event.getMessage();
+            event.setCancelled(true);
+            event.setFormat("");
+            TextComponent Testing = new TextComponent(" " + p.getName() + " " + event.getMessage().replace("&", "§"));
+            t.spigot().sendMessage(message, Testing);
+            System.out.println("" + ChatColor.RED + " " + ChatColor.BOLD + " " + p.getName() + " " + ChatColor.RESET + " " + te);
+
+        }
+    }
+    else {
+        event.setFormat(ChatColor.YELLOW + "" + p.getDisplayName() + ChatColor.RESET + " " + event.getMessage().replace("&", "§"));
+    }
+    }
+    public void test() {
+
+    }
+}
